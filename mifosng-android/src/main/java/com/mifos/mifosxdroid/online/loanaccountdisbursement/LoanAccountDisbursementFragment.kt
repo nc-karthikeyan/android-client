@@ -23,9 +23,11 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanDisbursement
+import com.mifos.objects.accounts.loan.PaymentTypeOptions
 import com.mifos.objects.templates.loans.LoanTransactionTemplate
 import com.mifos.utils.*
 import java.util.*
+import java.util.stream.Collectors
 import javax.inject.Inject
 
 /**
@@ -66,7 +68,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     private var disbursementDates: String? = null
     private var loanAccountNumber = 0
     private var mfDatePicker: DialogFragment? = null
-    private var paymentTypeOptions: List<String>? = null
+    private var paymentTypeOptions: MutableList<String> = ArrayList()
     private var paymentTypeOptionAdapter: ArrayAdapter<String>? = null
     private var loanTransactionTemplate: LoanTransactionTemplate? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,7 +141,9 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     override fun showLoanTransactionTemplate(loanTransactionTemplate: LoanTransactionTemplate) {
         this.loanTransactionTemplate = loanTransactionTemplate
         etDisbursedAmount!!.setText(loanTransactionTemplate.amount.toString())
-        paymentTypeOptions.addAll()
+        for (paymentTypeOption in loanTransactionTemplate.paymentTypeOptions) {
+            paymentTypeOptions.add(paymentTypeOption.name)
+        }
         paymentTypeOptionAdapter!!.notifyDataSetChanged()
     }
 

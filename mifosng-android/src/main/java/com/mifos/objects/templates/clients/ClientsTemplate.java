@@ -32,7 +32,7 @@ public class ClientsTemplate extends MifosBaseModel implements Parcelable {
     int officeId;
 
     private List<OfficeOptions> officeOptions;
-    private List<StaffOptions> staffOptions;
+    private List<StaffOptions> staffOptions = new ArrayList<>();
     private List<SavingProductOptions> savingProductOptions;
     private List<Options> genderOptions;
     private List<Options> clientTypeOptions;

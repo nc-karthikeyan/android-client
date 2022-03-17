@@ -47,6 +47,7 @@ import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.ValidationUtil
 import java.io.File
+import java.text.DateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -114,6 +115,10 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     var spClientClassification: Spinner? = null
 
     @JvmField
+    @BindView(R.id.sp_legal_form_id)
+    var spLegalFormId: Spinner? = null
+
+    @JvmField
     @BindView(R.id.layout_submission)
     var layout_submission: LinearLayout? = null
 
@@ -131,6 +136,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     private var staffId = 0
     private var genderId = 0
     private var clientClassificationId = 0
+    private var legalFormId = 0
     private var result = true
     private var submissionDateString: String? = null
     private var dateOfBirthString: String? = null
@@ -141,13 +147,15 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             : View? = null
     private var ClientImageFile: File? = null
     private var pickedImageUri: Uri? = null
-    private var genderOptionsList: MutableList<String>? = null
+    private var genderOptionsList: MutableList<String>? = ArrayList()
     private var clientClassificationList: MutableList<String>? = null
+    private var legalFormIdList: MutableList<String>? = null
     private var clientTypeList: MutableList<String>? = null
     private var officeList: MutableList<String>? = null
     private var staffList: MutableList<String>? = null
     private var genderOptionsAdapter: ArrayAdapter<String>? = null
     private var clientClassificationAdapter: ArrayAdapter<String>? = null
+    private var legalFormIdAdapter: ArrayAdapter<String>? = null
     private var clientTypeAdapter: ArrayAdapter<String>? = null
     private var officeAdapter: ArrayAdapter<String>? = null
     private var staffAdapter: ArrayAdapter<String>? = null
@@ -156,6 +164,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         super.onCreate(savedInstanceState)
         genderOptionsList = ArrayList()
         clientClassificationList = ArrayList()
+        legalFormIdList = ArrayList()
         clientTypeList = ArrayList()
         officeList = ArrayList()
         staffList = ArrayList()
@@ -183,6 +192,14 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spClientClassification!!.adapter = clientClassificationAdapter
         spClientClassification!!.onItemSelectedListener = this
+
+        legalFormIdAdapter = ArrayAdapter(activity,
+                android.R.layout.simple_spinner_item, legalFormIdList)
+        legalFormIdAdapter!!
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spLegalFormId!!.adapter = legalFormIdAdapter
+        spLegalFormId!!.onItemSelectedListener = this
+
         clientTypeAdapter = ArrayAdapter(activity,
                 android.R.layout.simple_spinner_item, clientTypeList)
         clientTypeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -268,15 +285,35 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         val clientPayload = ClientPayload()
 
         //Mandatory Fields
-        clientPayload.firstname = etClientFirstName!!.editableText.toString()
-        clientPayload.lastname = etClientLastName!!.editableText.toString()
+        clientPayload.legalFormId = legalFormId
         clientPayload.officeId = officeId
+
+        var firstName: String = if (etClientFirstName!!.editableText != null) etClientFirstName!!.editableText.toString() else ""
+        var middleName: String = if (etClientMiddleName!!.editableText != null) etClientMiddleName!!.editableText.toString() else ""
+        var lastName: String = if (etClientLastName!!.editableText != null) etClientLastName!!.editableText.toString() else ""
+
+        if (legalFormId == 1) {
+            // PERSON
+            clientPayload.firstname = firstName
+            clientPayload.lastname = lastName
+            if (middleName != "") {
+                clientPayload.middlename = middleName
+            }
+        } else {
+            // ENTITY
+            if (middleName != "") {
+                clientPayload.fullname = "$firstName $middleName $lastName"
+            } else {
+                clientPayload.fullname = "$firstName $lastName"
+            }
+        }
 
         //Optional Fields, we do not need to add any check because these fields carry some
         // default values
         clientPayload.isActive = cbClientActiveStatus!!.isChecked
         clientPayload.activationDate = submissionDateString
         clientPayload.dateOfBirth = dateOfBirthString
+        clientPayload.dateFormat = "dd MMMM yyyy"
 
         //Optional Fields
         if (!TextUtils.isEmpty(etClientMiddleName!!.editableText.toString())) {
@@ -306,7 +343,8 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         if (!isMiddleNameValid) {
             return
         }
-        if (isLastNameValid) {
+        // Last name optional for entity
+        if (legalFormId == 2 || isLastNameValid) {
             if (hasDataTables) {
                 val fragment = DataTableListFragment.newInstance(
                         clientsTemplate!!.dataTables,
@@ -352,6 +390,12 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         clientClassificationList!!.addAll(createNewClientPresenter!!
                 .filterOptions(clientsTemplate?.clientClassificationOptions))
         clientClassificationAdapter!!.notifyDataSetChanged()
+        if (clientsTemplate != null && clientsTemplate.clientLegalFormOptions != null) {
+            for (options in clientsTemplate.clientLegalFormOptions) {
+                legalFormIdList?.add(options.value)
+            }
+        }
+        legalFormIdAdapter!!.notifyDataSetChanged()
     }
 
     override fun showOffices(offices: List<Office?>?) {
@@ -409,6 +453,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             R.id.sp_client_type -> clientTypeId = clientsTemplate!!.clientTypeOptions[position].id
             R.id.sp_staff -> staffId = clientStaff!![position].id
             R.id.sp_client_classification -> clientClassificationId = clientsTemplate!!.clientClassificationOptions[position].id
+            R.id.sp_legal_form_id -> legalFormId = clientsTemplate!!.clientLegalFormOptions[position].id
         }
     }
 

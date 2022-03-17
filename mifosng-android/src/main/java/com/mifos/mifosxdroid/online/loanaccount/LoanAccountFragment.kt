@@ -239,9 +239,12 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         loansPayload.productId = productId
         loansPayload.repaymentEvery = etRepaidEvery!!.editableText.toString()
         loansPayload.submittedOnDate = submissionDate
-        loansPayload.loanPurposeId = loanPurposeId
+        if (loanPurposeId != 0) {
+            loansPayload.loanPurposeId = loanPurposeId
+        }
         loansPayload.loanTermFrequency = etLoanTerm!!.editableText.toString().toInt()
         loansPayload.loanTermFrequencyType = loanTermFrequency
+        loansPayload.externalId = etClientExternalId!!.editableText.toString()
 
         //loanTermFrequencyType and repaymentFrequencyType should be the same.
         loansPayload.repaymentFrequencyType = loanTermFrequency
@@ -250,7 +253,9 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         loansPayload.transactionProcessingStrategyId = transactionProcessingStrategyId
         loansPayload.fundId = fundId!!
         loansPayload.interestType = interestTypeId
-        loansPayload.loanOfficerId = loanOfficerId
+        if (loanOfficerId != 0) {
+            loansPayload.loanOfficerId = loanOfficerId
+        }
         loansPayload.linkAccountId = linkAccountId
         interestRatePerPeriod =
                 etNominalInterestRate!!.editableText.toString().toDouble()

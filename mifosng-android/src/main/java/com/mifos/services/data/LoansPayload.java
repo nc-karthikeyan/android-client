@@ -37,11 +37,12 @@ public class LoansPayload implements Parcelable {
     Integer repaymentFrequencyNthDayType;
     String submittedOnDate;
     int transactionProcessingStrategyId;
-    int loanPurposeId;
-    int loanOfficerId;
+    Integer loanPurposeId;
+    Integer loanOfficerId;
     int fundId;
     Integer linkAccountId;
     ArrayList<DataTablePayload> datatables;
+    String externalId;
 
     public ArrayList<DataTablePayload> getDataTables() {
         return datatables;
@@ -261,6 +262,13 @@ public class LoansPayload implements Parcelable {
         this.repaymentFrequencyNthDayType = repaymentFrequencyNthDayType;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
 
     public LoansPayload() {
     }

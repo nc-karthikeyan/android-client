@@ -102,6 +102,12 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
     @Column
     String locale = "en";
 
+    @SerializedName("legalFormId")
+    Integer legalFormId;
+
+    @SerializedName("fullname")
+    String fullname;
+
     @SerializedName("datatables")
     List<DataTablePayload> datatables = new ArrayList<>();
 
@@ -271,6 +277,22 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public Integer getLegalFormId() {
+        return legalFormId;
+    }
+
+    public void setLegalFormId(Integer legalFormId) {
+        this.legalFormId = legalFormId;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     @Override

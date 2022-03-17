@@ -5,6 +5,7 @@ import com.mifos.objects.user.User;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import com.mifos.objects.Login;
 
 import rx.Observable;
 
@@ -27,6 +28,6 @@ public class DataManagerAuth {
      * @return Basic OAuth
      */
     public Observable<User> login(String username, String password) {
-        return baseApiManager.getAuthApi().authenticate(username, password);
+        return baseApiManager.getAuthApi().authenticate(Login.builder().username(username).password(password).build());
     }
 }
