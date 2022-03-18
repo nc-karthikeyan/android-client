@@ -392,6 +392,7 @@
     <string name="product">Savings Products</string>
     <string name="field_officer">Field Officer</string>
     <string name="client_classification">Client Classification</string>
+    <string name="legal_form_id">Legal Form Id</string>
     <string name="interest_comp">Interest Compounding Period</string>
     <string name="repaidevery">Repaid Every</string>
     <string name="repaidevery_nthfreq">on</string>

@@ -216,6 +216,29 @@
                 android:backgroundTint="@color/gray_dark"/>
 
         </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_legal_form_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="@string/legal_form_id"
+                    android:textSize="12sp"
+                    style="@style/Base.TextAppearance.AppCompat.Small"/>
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:id="@+id/sp_legal_form_id"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:spinnerMode="dropdown"
+                    android:paddingTop="10dp"
+                    android:backgroundTint="@color/gray_dark"/>
+
+            </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

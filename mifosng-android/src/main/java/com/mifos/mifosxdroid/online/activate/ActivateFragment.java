@@ -87,6 +87,7 @@ public class ActivateFragment extends MifosBaseFragment implements ActivateMvpVi
     @OnClick(R.id.btn_activate)
     void onClickActivationButton() {
         ActivatePayload clientActivate = new ActivatePayload(activationDate);
+        clientActivate.setDateFormat("dd MMMM yyyy");
         activate(clientActivate);
     }
 
